@@ -5,21 +5,20 @@ const serviceUUIDs = ['ffe0'];
 const characteristicUUIDs = ['ffe1'];
 
 var WebBLE = {
-  _noble : Noble,
-  _characteristics : null
+  _noble : Noble
 };
 
 function onServicesAndCharacteristicsDiscovered(error, services, characteristics) {
-  // const echoCharacteristic = characteristics[0];
-  WebBLE = characteristics[0];
-  // Receive Event 바인딩
-  echoCharacteristic.on('data', (data, isNotification) => {
-    console.log('Received: "' + data + '"');
+  const _characteristics = characteristics[0];
+
+  // receive Event 바인딩
+  _characteristics.on('data', (data, isNotification) => {
+    console.log("Received: " + data);
   });
 
   // write Event 바인딩
-  echoCharacteristic.on('write', () => {
-    // TODO
+  _characteristics.on('write', (err) => {
+    if(err) console.log("write err : " , err)
   });
 }
 
@@ -40,17 +39,38 @@ WebBLE.connect = function(uuid){
         peripheral.discoverSomeServicesAndCharacteristics(serviceUUIDs, characteristicUUIDs, onServicesAndCharacteristicsDiscovered);
     });
 
-    // 연결된 블루투스 기기의 이벤트를 바인딩하는곳
+    // 연결 이벤트 바인딩
     peripheral.once('connect',function(err){
       if(err) console.log("connect err : " , err)
-      // TODO
-      console.log("send Data");
+      /**
+      * TODO
+      */
     });
 
+
+    // 연결해제 바인딩
     peripheral.once('disconnect',function(err){
       if(err) console.log("disconnect err : " , err)
-      // TODO
+      /**
+      * TODO
+      */
     });
+  }
+};
+
+WebBLE.disconnect = function(uuid){
+  var peripheral = Noble._peripherals[uuid];
+  peripheral.disconnect(function(){
+    /**
+    * TODO
+    */
+  })
+};
+
+WebBLE.allDisconnect = function(){
+  var peripheral = Noble._peripherals;
+  for( var key in peripheral ) {
+    Noble.disconnect(key);
   }
 };
 

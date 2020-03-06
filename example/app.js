@@ -16,6 +16,7 @@ server.listen(3000, function() {
 });
 
 app.use(express.static('public'));
+app.use("/views", express.static('./views/'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());

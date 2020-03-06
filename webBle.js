@@ -5,12 +5,13 @@ const serviceUUIDs = ['ffe0'];
 const characteristicUUIDs = ['ffe1'];
 
 var WebBLE = {
-  noble : Noble
+  _noble : Noble,
+  _characteristics : null
 };
 
 function onServicesAndCharacteristicsDiscovered(error, services, characteristics) {
-  const echoCharacteristic = characteristics[0];
-
+  // const echoCharacteristic = characteristics[0];
+  WebBLE = characteristics[0];
   // Receive Event 바인딩
   echoCharacteristic.on('data', (data, isNotification) => {
     console.log('Received: "' + data + '"');

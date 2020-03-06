@@ -8,6 +8,7 @@ body {
 }
 body {
 }
+
 table {
   margin-bottom: 2rem;
 }
@@ -21,6 +22,19 @@ th, td{
 }
 th {
   text-align: left;
+}
+
+.card-body{
+  float:left;
+  width:40%;
+  height:50%;
+  overflow:auto;
+}
+.virtual-div{
+  width:100%;
+  clear: both;
+  display: block;
+  content: ''
 }
 .common-bg {
   background: linear-gradient(to right, #00000015, #00000025);

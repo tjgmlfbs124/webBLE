@@ -8,6 +8,8 @@ module.exports = function(app, io)
 
 	io.on('connection', function(socket) {
 			console.log("Connected io socket ")
+			io.emit('init', {});
+
 			socket.on('scanStart', function(data) {
 				WebBLE.startScanning();
 			});
@@ -24,10 +26,26 @@ module.exports = function(app, io)
 			socket.on('writeData', function(data){
 				WebBLE.write(data);
 			});
+
+			socket.on('deviceDisconnect', function(data){
+				console.log("data : " , data)
+				WebBLE.disconnect(data);
+			});
+
+			socket.on('allDisconnect', function(data) {
+				WebBLE.allDisconnect(data);
+				io.emit('init',null);
+			});
 	});
 
+
+	// stateChange 바인딩
+	WebBLE._noble.on('stateChange', function(state){
+		console.log("state : ", state);
+	})
+
 	// discover 바인딩
-	WebBLE.noble.on('discover', function(peripheral){
+	WebBLE._noble.on('discover', function(peripheral){
 	  var name =  peripheral.advertisement.localName;
 	  if(name){
 	    // TODO
@@ -36,5 +54,7 @@ module.exports = function(app, io)
 	    }
 	  }
 	});
+
+
 
 }

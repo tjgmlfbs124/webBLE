@@ -52,7 +52,7 @@ webBLE.noble.on('discover', function(peripheral){  // discover 이벤트 바인�
    *   }
    *   ...
    * }
-   */
+   **/
 });
 
 webBLE.connect(uuid); // uuid에 맞는 BLE 모듈 연결

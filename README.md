@@ -42,7 +42,17 @@ webBLE.startScanning(); // BLE 스캔 시작
 webBLE.stopScanning(); // BLE 스캔종료
 
 webBLE.noble.on('discover', function(peripheral){  // discover 이벤트 바인딩하는곳
-
+  /**
+   * peripheral {
+   *   rssi :
+   *   uuid :
+   *   Address :
+   *   advertisement: {
+   *     localName :
+   *   }
+   *   ...
+   * }
+   */
 });
 
 webBLE.connect(uuid); // uuid에 맞는 BLE 모듈 연결

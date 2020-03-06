@@ -1,0 +1,97 @@
+<html>
+  <head>
+    <title>Main</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="socket.io/socket.io.js"></script>
+    <script>
+      const socket = new io.connect();
+      var deviceList = new Array();
+
+      var index = 0;
+      socket.on("deviceName", function(data) {
+        var html;
+        html += "<tr onclick=\"onListClick(this)\">";
+        html += "<td>" + index + "</td>";
+        html += "<td>" + data.name + "</td>";
+        html += "<td>" + data.uuid + "</td>";
+        html += "<td>" + data.address + "</td>";
+        html += "<td>" + data.rssi + "</td>";
+        html += "</tr>";
+        $(discoverList).append(html);
+        index++;
+      });
+
+      function onButtonClick(params){
+        socket.emit(params, "");
+      }
+
+      function onSendButtonClick(params){
+          var tr = params.parentNode.parentNode;
+          var uuid = (tr.children[2]).innerHTML;
+          var data = (tr.children[3]).children[0].value;
+
+          socket.emit('writeData', {uuid:uuid, data:data});
+      }
+
+      function onListClick(params){
+        var selectUUID = (params.children[2]).innerHTML;
+        socket.emit('deviceConnect', selectUUID);
+        var html;
+        html += "<tr>";
+        html += "<td>" + (params.children[0]).innerHTML + "</td>";
+        html += "<td>" + (params.children[1]).innerHTML + "</td>";
+        html += "<td>" + (params.children[2]).innerHTML + "</td>";
+        html += "<td><input type=\"text\"></td>";
+        html += "<td><button onclick=\"onSendButtonClick(this)\">보내기</button></td>";
+        html += "</tr>";
+        $(connectList).append(html);
+        index++;
+      }
+
+    </script>
+  </head>
+  <body>
+      <div>
+        <button type="button" onclick="onButtonClick('scanStart')"> 스캔시작 </button>
+        <button onclick="onButtonClick('scanStop')"> 스캔중지 </button>
+        <button onclick="onButtonClick('disconnect')"> 연결취소 </button>
+      </div>
+      <div class="card-body" style="padding-top:20px;">
+        <h4>근처의 블루투스</h4>
+        <table class="table" style="width:100%" >
+          <thead>
+            <tr>
+              <th> 장치번호 </th>
+              <th> 블루투스 이름 </th>
+              <th> uuid </th>
+              <th> Address </th>
+              <th> rssi </th>
+            </tr>
+          </thead>
+          <tbody id = "discoverList">
+          </tbody>
+        </table>
+      </div>
+
+
+      <div class="card-body" style="padding-top:20px;">
+        <h4>연결된 블루투스 </h4>
+        <table class="table" style="width:100%" >
+          <thead>
+            <tr>
+              <th> 장치번호 </th>
+              <th> 블루투스 이름 </th>
+              <th> uuid </th>
+              <th> 내용 </th>
+              <th> </th>
+            </tr>
+          </thead>
+          <tbody id = "connectList">
+          </tbody>
+        </table>
+      </div>
+
+
+  </body>
+</html>
